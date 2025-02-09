@@ -5,6 +5,8 @@ import { DetailsUserController } from "./controllers/user/DetailsUserController"
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { CreateCategoryController } from "./controllers/catgegory/CreateCategoryController";
 import { ListCategoryController } from "./controllers/catgegory/ListCategoryController";
+import { DeleteCategoryController } from "./controllers/catgegory/DeleteCategoryController";
+import { UpdateCategoryController } from "./controllers/catgegory/UpdateCategoryController";
 
 const router = Router();
 
@@ -24,5 +26,15 @@ router.post(
 );
 
 router.get("/category", isAuthenticated, new ListCategoryController().handle);
+router.delete(
+  "/category/:id",
+  isAuthenticated,
+  new DeleteCategoryController().handle,
+);
+router.put(
+  "/category/:id",
+  isAuthenticated,
+  new UpdateCategoryController().handle,
+);
 
 export { router };
