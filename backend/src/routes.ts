@@ -1,14 +1,23 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
+import multer from "multer";
+
 import { CreateUserController } from "./controllers/user/CreateUserController";
 import { AuthUserController } from "./controllers/user/AuthUserController";
 import { DetailsUserController } from "./controllers/user/DetailsUserController";
 import { isAuthenticated } from "./middlewares/isAuthenticated";
-import { CreateCategoryController } from "./controllers/catgegory/CreateCategoryController";
-import { ListCategoryController } from "./controllers/catgegory/ListCategoryController";
-import { DeleteCategoryController } from "./controllers/catgegory/DeleteCategoryController";
-import { UpdateCategoryController } from "./controllers/catgegory/UpdateCategoryController";
+
+import { ListCategoryController } from "./controllers/category/ListCategoryController";
+import { CreateCategoryController } from "./controllers/category/CreateCategoryController";
+import { DeleteCategoryController } from "./controllers/category/DeleteCategoryController";
+import { UpdateCategoryController } from "./controllers/category/UpdateCategoryController";
+
+import { CreateProductController } from "./controllers/product/CreateProductController";
+
+import uploadConfig from "./config/multer";
 
 const router = Router();
+
+const upload = multer(uploadConfig.upload("../tmp"));
 
 // --- ROTAS USERS --
 
@@ -18,7 +27,7 @@ router.post("/users", new CreateUserController().handle);
 router.post("/session", new AuthUserController().handler);
 router.get("/me", isAuthenticated, new DetailsUserController().handle);
 
-// ___ ROTAS CATEGORY ___
+// --- ROTAS CATEGORY ---
 router.post(
   "/category",
   isAuthenticated,
@@ -35,6 +44,14 @@ router.put(
   "/category/:id",
   isAuthenticated,
   new UpdateCategoryController().handle,
+);
+
+// --- ROTAS PRODUCT ---
+router.post(
+  "/product",
+  isAuthenticated,
+  upload.single("file"),
+  new CreateProductController().handle,
 );
 
 export { router };
